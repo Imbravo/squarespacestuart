@@ -1,0 +1,11 @@
+{
+  "targets": {
+    "squarespacestuart": {
+      "hosting": {
+        "squarespacestuart": [
+          "squarespacestuart"
+        ]
+      }
+    }
+  }
+}
