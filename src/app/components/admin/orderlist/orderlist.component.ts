@@ -12,13 +12,14 @@ import { catchError, retry } from 'rxjs/operators';
 export class OrderlistComponent implements OnInit {
   ordenes;
 
-  constructor( private http: HttpClient) { }
+  constructor(private http: HttpClient) { }
 
 
   ngOnInit(): void {
-    const headers = { 'Authorization': 'Bearer 007ee585-3b3e-450e-8aa2-c9631ee7b86e', 
-    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:77.0) Gecko/20100101 Firefox/77.0',
-    'Content-Type': 'application/json'
+    const headers = {
+      'Authorization': 'Bearer 007ee585-3b3e-450e-8aa2-c9631ee7b86e',
+      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:77.0) Gecko/20100101 Firefox/77.0',
+      'Content-Type': 'application/json'
     }
 
 
@@ -27,12 +28,25 @@ export class OrderlistComponent implements OnInit {
     }
 
     this.http.get<any>(`https://us-central1-squarespacestuart.cloudfunctions.net/getOrdenes`).subscribe(data => {
-    this.ordenes = JSON.parse(data.body);
-    console.log(this.ordenes.result);
-    this.ordenes = this.ordenes.result;
+      this.ordenes = JSON.parse(data.body);
+      console.log(this.ordenes.result);
+      this.ordenes = this.ordenes.result;
     })
 
 
   }
+
+
+  createJob(order) {
+    var respuesta;
+    console.log('clicked');
+    console.log(order);
+    this.http.post<any>(`https://us-central1-squarespacestuart.cloudfunctions.net/getOrdenes`, order).subscribe(data => {
+      respuesta = data;
+      console.log(respuesta);
+    })
+
+  }
+
 
 }
