@@ -29,6 +29,7 @@ export class OrderlistComponent implements OnInit {
     this.http.get<any>(`https://us-central1-squarespacestuart.cloudfunctions.net/getOrdenes`).subscribe(data => {
     this.ordenes = JSON.parse(data.body);
     console.log(this.ordenes.result);
+    this.ordenes = this.ordenes.result;
     })
 
 

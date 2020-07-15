@@ -1,4 +1,57 @@
-<p>orderlist works!</p>
+<div class="container">
+    <div *ngFor="let order of ordenes">
+        <div class="card">
+            <div class="card-header">
+                <div class="row">
+                    <div class="col-6">
+                        Order Number: {{order.orderNumber}}
+                        Status: {{order.fulfillmentStatus}}
+                    </div>
+                    <div class="col-6 text-right">
+                        {{order.billingAddress.firstName}} {{order.billingAddress.lastName}}
+                    </div>
+
+                </div>
+            </div>
+            <div class="card-body">
+                <h5 class="card-title text-center">Direccion de envio: </h5>
+                <p class="card-text">{{order.shippingAddress.address1}}</p>
+                <p class="card-text">{{order.shippingAddress.city}}</p>
+                <p class="card-text">{{order.shippingAddress.postalCode}}</p>
+                <p class="card-text">{{order.shippingAddress.firstName}}</p>
+                <p class="card-text">{{order.shippingAddress.lastName}}</p>
+                <p class="card-text">Telefono: {{order.shippingAddress.phone}}</p>
+                <p class="card-text">Comentarios de entrega: {{order.formSubmission[0].value}}</p>
 
 
+                <div class="container">
+                    <div class="row">
+                        <div class="col">
+                            <div class="lead">
+                                Items
+                            </div>
+                            <ul class="list-group" *ngFor='let item of order.lineItems, let i = index'>
+                                <li class="list-group-item">Item: {{item.productName}} Cantidad: {{item.quantity}} </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
 
+                <div class="button-wrapper text-right">
+                    <a href="#" class="button-margin btn btn-danger">Cancelar orden</a>
+                    <a href="#" class="button-margin btn btn-primary">Enviar a stuart</a>
+                </div>
+            </div>
+            <div class="card-footer text-muted">
+                {{order.createdOn}}
+            </div>
+        </div>
+
+        <div class="separator">
+
+        </div>
+
+    </div>
+
+
+</div>
