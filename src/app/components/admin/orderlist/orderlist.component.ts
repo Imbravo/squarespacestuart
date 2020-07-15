@@ -11,7 +11,7 @@ import { catchError, retry } from 'rxjs/operators';
 })
 export class OrderlistComponent implements OnInit {
   ordenes;
-
+  errorDisplay = true;
   constructor(private http: HttpClient) { }
 
 
@@ -36,15 +36,25 @@ export class OrderlistComponent implements OnInit {
 
   }
 
-
+//Creates a job request using stuart api
+//Returns a JSON with the job created or an error when the job request fails
+//Generates a pop up when success or error. 
   createJob(order) {
     var respuesta;
     console.log('clicked');
     console.log(order);
-    this.http.post<any>(`https://us-central1-squarespacestuart.cloudfunctions.net/getOrdenes`, order).subscribe(data => {
-      respuesta = data;
-      console.log(respuesta);
-    })
+    this.http.post<any>(`https://us-central1-squarespacestuart.cloudfunctions.net/getOrdenes`, order).subscribe({
+      next: data => { 
+        respuesta = data; 
+        console.log(respuesta);
+        //If JSON object hast error then print in console
+        if(respuesta.error){
+          console.log('bigg error');//aqui cambio de variable para mostrar el modal.
+        }
+      
+      },
+      error: error => console.error('There was an error!', error)
+  })
 
   }
 
