@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError, retry } from 'rxjs/operators';
 import { OrderService } from '../../../services/order.service';
+import { AngularFirestore} from '@angular/fire/firestore';
 
 @Component({
   selector: 'app-orderlist',
@@ -12,10 +13,21 @@ import { OrderService } from '../../../services/order.service';
 export class OrderlistComponent implements OnInit {
   ordenes;
   errorDisplay = true;
-  constructor(private http: HttpClient, private orderService:OrderService) { }
-
+  constructor(private http: HttpClient, private orderService:OrderService, private firestore:AngularFirestore) { }
+  sentOrders: any[];
 
   ngOnInit(): void {
+
+   //this.sentOrders = this.firestore.collection('orders').valueChanges(); 
+
+    this.orderService.getOrders().subscribe(orders =>{
+      this.sentOrders = orders;
+      console.log(this.sentOrders);
+    });
+
+
+   
+
     const headers = {
       'Authorization': 'Bearer 007ee585-3b3e-450e-8aa2-c9631ee7b86e',
       'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:77.0) Gecko/20100101 Firefox/77.0',
@@ -34,6 +46,17 @@ export class OrderlistComponent implements OnInit {
       this.ordenes = this.ordenes.filter(order => {
         return order.fulfillmentStatus === 'PENDING'
       });
+      console.log(this.ordenes);
+      for(var i=0;i<this.sentOrders.length;i++){
+     
+
+        this.ordenes = this.ordenes.filter(order => {
+
+          return order.orderNumber != this.sentOrders[i].orderNumber;
+        });
+      }
+      console.log(this.ordenes);
+
     })
 
 
@@ -56,6 +79,15 @@ export class OrderlistComponent implements OnInit {
         }
         else{
           this.orderService.createOrder(order);
+          console.log(this.sentOrders);
+          for(var i=0;i<this.sentOrders.length;i++){
+     
+
+            this.ordenes = this.ordenes.filter(order => {
+    
+              return order.orderNumber != this.sentOrders[i].orderNumber;
+            });
+          }
         }
       
       },
@@ -63,6 +95,13 @@ export class OrderlistComponent implements OnInit {
   })
 
   }
+
+
+  trackOrder(index:number, order:any) {
+    console.log(order);
+    return order ? order.orderNumber : null;
+
+}
 
 
 }

@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
+import { Observable } from 'rxjs';
 
 
 @Injectable({
@@ -7,10 +8,13 @@ import { AngularFirestore } from '@angular/fire/firestore';
 })
 export class OrderService {
 
-  constructor(private fireStore: AngularFirestore) { }
+  orders: Observable<any[]>;
+  constructor(private fireStore: AngularFirestore) { 
+    this.orders = this.fireStore.collection('orders').valueChanges();
+  }
 
   getOrders() {
-    return this.fireStore.collection('orders').snapshotChanges();
+    return this.orders;
   }
 
   createOrder(order:any) {
