@@ -4,6 +4,10 @@ import { Observable, throwError } from 'rxjs';
 import { catchError, retry } from 'rxjs/operators';
 import { OrderService } from '../../../services/order.service';
 import { AngularFirestore} from '@angular/fire/firestore';
+import { Location } from '@angular/common';
+import { Router } from '@angular/router';
+
+
 
 @Component({
   selector: 'app-orderlist',
@@ -13,7 +17,7 @@ import { AngularFirestore} from '@angular/fire/firestore';
 export class OrderlistComponent implements OnInit {
   ordenes;
   errorDisplay = true;
-  constructor(private http: HttpClient, private orderService:OrderService, private firestore:AngularFirestore) { }
+  constructor(private http: HttpClient, private orderService:OrderService, private firestore:AngularFirestore, public router: Router, public location: Location) { }
   sentOrders: any[];
 
   ngOnInit(): void {
@@ -102,6 +106,16 @@ export class OrderlistComponent implements OnInit {
     return order ? order.orderNumber : null;
 
 }
+
+
+  refresh(): void{
+    this.router.navigateByUrl('/',{skipLocationChange:true}).then(()=>{
+      this.router.navigate([decodeURI(this.location.path())]);
+    });
+    
+    
+ 
+  }
 
 
 }
