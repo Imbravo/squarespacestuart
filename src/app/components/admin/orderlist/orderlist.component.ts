@@ -5,6 +5,10 @@ import { catchError, retry } from 'rxjs/operators';
 import { OrderService } from '../../../services/order.service';
 import { AngularFirestore} from '@angular/fire/firestore';
 import {NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
+import { Location } from '@angular/common';
+import { Router } from '@angular/router';
+
+
 
 @Component({
   selector: 'app-orderlist',
@@ -20,7 +24,7 @@ export class OrderlistComponent implements OnInit {
   //Clases Modal
   ordenes;
   errorDisplay = true;
-  constructor(private http: HttpClient, private orderService:OrderService, private firestore:AngularFirestore, private modalService: NgbModal) { }
+  constructor(private http: HttpClient, private orderService:OrderService, private firestore:AngularFirestore, public router: Router, public location: Location, private modalService: NgbModal) { }
   sentOrders: any[];
 
   ngOnInit(): void {
@@ -129,5 +133,14 @@ private getDismissReason(reason: any): string {
     return  `with: ${reason}`;
   }
 }
+  refresh(): void{
+    this.router.navigateByUrl('/',{skipLocationChange:true}).then(()=>{
+      this.router.navigate([decodeURI(this.location.path())]);
+    });
+    
+    
+ 
+  }
+
 
 }
