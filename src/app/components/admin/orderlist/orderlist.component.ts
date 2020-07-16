@@ -4,19 +4,27 @@ import { Observable, throwError } from 'rxjs';
 import { catchError, retry } from 'rxjs/operators';
 import { OrderService } from '../../../services/order.service';
 import { AngularFirestore} from '@angular/fire/firestore';
+import {NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-orderlist',
   templateUrl: './orderlist.component.html',
   styleUrls: ['./orderlist.component.scss']
 })
+
+
 export class OrderlistComponent implements OnInit {
+  abrirModal = "#mymodal";
+  //Clases Modal
+  closeResult: string;
+  //Clases Modal
   ordenes;
   errorDisplay = true;
-  constructor(private http: HttpClient, private orderService:OrderService, private firestore:AngularFirestore) { }
+  constructor(private http: HttpClient, private orderService:OrderService, private firestore:AngularFirestore, private modalService: NgbModal) { }
   sentOrders: any[];
 
   ngOnInit(): void {
+
 
    //this.sentOrders = this.firestore.collection('orders').valueChanges(); 
 
@@ -65,7 +73,7 @@ export class OrderlistComponent implements OnInit {
 //Creates a job request using stuart api
 //Returns a JSON with the job created or an error when the job request fails
 //Generates a pop up when success or error. 
-  createJob(order) {
+  createJob(order, mymodal) {
     var respuesta;
     console.log('clicked');
     console.log(order);
@@ -76,8 +84,10 @@ export class OrderlistComponent implements OnInit {
         //If JSON object hast error then print in console
         if(respuesta.error){
           console.log('bigg error');//aqui cambio de variable para mostrar el modal.
+          this.errorDisplay= true;
         }
         else{
+          this.errorDisplay= false;
           this.orderService.createOrder(order);
           console.log(this.sentOrders);
           for(var i=0;i<this.sentOrders.length;i++){
@@ -89,6 +99,12 @@ export class OrderlistComponent implements OnInit {
             });
           }
         }
+        //Codigo para abrir MODAL
+        this.modalService.open(mymodal, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {
+          this.closeResult = `Closed with: ${result}`;
+        }, (reason) => {
+          this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+        });
       
       },
       error: error => console.error('There was an error!', error)
@@ -103,5 +119,15 @@ export class OrderlistComponent implements OnInit {
 
 }
 
+
+private getDismissReason(reason: any): string {
+  if (reason === ModalDismissReasons.ESC) {
+    return 'by pressing ESC';
+  } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
+    return 'by clicking on a backdrop';
+  } else {
+    return  `with: ${reason}`;
+  }
+}
 
 }
