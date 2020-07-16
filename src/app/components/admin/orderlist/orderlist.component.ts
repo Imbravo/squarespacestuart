@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError, retry } from 'rxjs/operators';
-
+import { OrderService } from '../../../services/order.service';
 
 @Component({
   selector: 'app-orderlist',
@@ -12,7 +12,7 @@ import { catchError, retry } from 'rxjs/operators';
 export class OrderlistComponent implements OnInit {
   ordenes;
   errorDisplay = true;
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private orderService:OrderService) { }
 
 
   ngOnInit(): void {
@@ -31,6 +31,9 @@ export class OrderlistComponent implements OnInit {
       this.ordenes = JSON.parse(data.body);
       console.log(this.ordenes.result);
       this.ordenes = this.ordenes.result;
+      this.ordenes = this.ordenes.filter(order => {
+        return order.fulfillmentStatus === 'PENDING'
+      });
     })
 
 
@@ -50,6 +53,9 @@ export class OrderlistComponent implements OnInit {
         //If JSON object hast error then print in console
         if(respuesta.error){
           console.log('bigg error');//aqui cambio de variable para mostrar el modal.
+        }
+        else{
+          this.orderService.createOrder(order);
         }
       
       },
