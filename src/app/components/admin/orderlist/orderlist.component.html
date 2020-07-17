@@ -38,8 +38,8 @@
                 </div>
 
                 <div class="button-wrapper text-right">
-                    <a  class="button-margin btn btn-danger">Cancelar orden</a>
-                    <a (click)="createJob(order, mymodal)" class="button-margin btn btn-primary">Enviar a stuart</a>
+                    <!-- <a  class="button-margin btn btn-danger">Cancelar orden</a> -->
+                     <button (click)="createJob(order, mymodal)"type="button" class="btn btn-outline-dark btn-lg ">Enviar a stuart </button>
                 </div>
             </div>
             <div class="card-footer text-muted">
@@ -59,28 +59,28 @@
 
 
     
-    <ng-template #mymodal let-modal>
+    <ng-template #mymodal let-c="close">
         <div class="modal-header">
-            <h4 class="modal-title" id="modal-basic-title">Bootstrap Modal</h4>
-            <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
-                <span aria-hidden="true">×</span>
-            </button>
+            <h4 class="modal-title" id="modal-basic-title">Pic&Nic</h4>
         </div>
         <div class="modal-body">
             <div class="text-center" *ngIf="errorDisplay=='loading'">
                 <div class="spinner-border" role="status">
-                  <span class="sr-only">Loading...</span>
+                    <span class="sr-only">Loading...</span>
                 </div>
-              </div>
-            <div *ngIf="errorDisplay=='error'">
-                Se mostro con error
             </div>
-            <div *ngIf="errorDisplay=='success'">
-                Se mostro sin error
+            <div class="text-left" *ngIf="errorDisplay=='error'">
+                No se logró hacer el pedido, razones:
+
+                    <li>La dirección no se ingresó correctamente(ingresar la orden manualmente en el dashboard de stuart)</li>
+                    <li>La orden esta fuera de los tiempos de trabajo de stuart</li>
+                
+            </div>
+            <div class="text-center" *ngIf="errorDisplay=='success'">
+                La solicitud a stuart se envió correctamente
             </div>
         </div>
         <div class="modal-footer">
-            <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click'); refresh();">Ok</button>
+            <button type="button" class="btn btn-outline-success" (click)="c('Save click'); refresh();">Ok</button>
         </div>
     </ng-template>
-    

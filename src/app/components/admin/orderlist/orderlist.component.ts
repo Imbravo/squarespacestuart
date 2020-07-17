@@ -4,7 +4,7 @@ import { Observable, throwError } from 'rxjs';
 import { catchError, retry } from 'rxjs/operators';
 import { OrderService } from '../../../services/order.service';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, ModalDismissReasons, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
 import { Location } from '@angular/common';
 import { Router } from '@angular/router';
 
@@ -26,7 +26,10 @@ export class OrderlistComponent implements OnInit {
   errorDisplay = 'loading';
   sentOrders: any[];
 
-  constructor(private http: HttpClient, private orderService: OrderService, private firestore: AngularFirestore, public router: Router, public location: Location, private modalService: NgbModal) { }
+  constructor(private http: HttpClient, private orderService: OrderService, private firestore: AngularFirestore, public router: Router, public location: Location, private modalService: NgbModal, config: NgbModalConfig) {
+    config.backdrop = 'static';
+    config.keyboard = false;
+  }
 
 
   ngOnInit(): void {
