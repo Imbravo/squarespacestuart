@@ -1,5 +1,5 @@
 <div class="container">
-    <div *ngFor="let order of ordenes; trackBy:trackOrder ">
+    <div *ngFor="let order of ordenes">
         <div class="card">
             <div class="card-header">
                 <div class="row">
@@ -38,7 +38,7 @@
                 </div>
 
                 <div class="button-wrapper text-right">
-                    <a (click)="refresh()" class="button-margin btn btn-danger">Cancelar orden</a>
+                    <a  class="button-margin btn btn-danger">Cancelar orden</a>
                     <a (click)="createJob(order, mymodal)" class="button-margin btn btn-primary">Enviar a stuart</a>
                 </div>
             </div>
@@ -67,15 +67,20 @@
             </button>
         </div>
         <div class="modal-body">
-            <div *ngif="errorDisplay">
+            <div class="text-center" *ngIf="errorDisplay=='loading'">
+                <div class="spinner-border" role="status">
+                  <span class="sr-only">Loading...</span>
+                </div>
+              </div>
+            <div *ngIf="errorDisplay=='error'">
                 Se mostro con error
             </div>
-            <div *ngif="!errorDisplay">
+            <div *ngIf="errorDisplay=='success'">
                 Se mostro sin error
             </div>
         </div>
         <div class="modal-footer">
-            <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Ok</button>
+            <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click'); refresh();">Ok</button>
         </div>
     </ng-template>
     

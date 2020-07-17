@@ -3,8 +3,8 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError, retry } from 'rxjs/operators';
 import { OrderService } from '../../../services/order.service';
-import { AngularFirestore} from '@angular/fire/firestore';
-import {NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
+import { AngularFirestore } from '@angular/fire/firestore';
+import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import { Location } from '@angular/common';
 import { Router } from '@angular/router';
 
@@ -23,22 +23,24 @@ export class OrderlistComponent implements OnInit {
   closeResult: string;
   //Clases Modal
   ordenes;
-  errorDisplay = true;
-  constructor(private http: HttpClient, private orderService:OrderService, private firestore:AngularFirestore, public router: Router, public location: Location, private modalService: NgbModal) { }
+  errorDisplay = 'loading';
   sentOrders: any[];
+
+  constructor(private http: HttpClient, private orderService: OrderService, private firestore: AngularFirestore, public router: Router, public location: Location, private modalService: NgbModal) { }
+
 
   ngOnInit(): void {
 
 
-   //this.sentOrders = this.firestore.collection('orders').valueChanges(); 
+    //this.sentOrders = this.firestore.collection('orders').valueChanges(); 
 
-    this.orderService.getOrders().subscribe(orders =>{
+    this.orderService.getOrders().subscribe(orders => {
       this.sentOrders = orders;
       console.log(this.sentOrders);
     });
 
 
-   
+
 
     const headers = {
       'Authorization': 'Bearer 007ee585-3b3e-450e-8aa2-c9631ee7b86e',
@@ -59,9 +61,7 @@ export class OrderlistComponent implements OnInit {
         return order.fulfillmentStatus === 'PENDING'
       });
       console.log(this.ordenes);
-      for(var i=0;i<this.sentOrders.length;i++){
-     
-
+      for (var i = 0; i < this.sentOrders.length; i++) {
         this.ordenes = this.ordenes.filter(order => {
 
           return order.orderNumber != this.sentOrders[i].orderNumber;
@@ -74,72 +74,75 @@ export class OrderlistComponent implements OnInit {
 
   }
 
-//Creates a job request using stuart api
-//Returns a JSON with the job created or an error when the job request fails
-//Generates a pop up when success or error. 
+  //Creates a job request using stuart api
+  //Returns a JSON with the job created or an error when the job request fails
+  //Generates a pop up when success or error. 
   createJob(order, mymodal) {
+    //Codigo para abrir MODAL
+    this.modalService.open(mymodal, { ariaLabelledBy: 'modal-basic-title' }).result.then((result) => {
+      this.closeResult = `Closed with: ${result}`;
+    }, (reason) => {
+      this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+    });
+
+
     var respuesta;
     console.log('clicked');
     console.log(order);
+
     this.http.post<any>(`https://us-central1-squarespacestuart.cloudfunctions.net/getOrdenes`, order).subscribe({
-      next: data => { 
-        respuesta = data; 
+      next: data => {
+        respuesta = data;
         console.log(respuesta);
         //If JSON object hast error then print in console
-        if(respuesta.error){
+        if (respuesta.error) {
           console.log('bigg error');//aqui cambio de variable para mostrar el modal.
-          this.errorDisplay= true;
+          this.errorDisplay = 'error';
         }
-        else{
-          this.errorDisplay= false;
+        else {
+          this.errorDisplay = 'success';
           this.orderService.createOrder(order);
           console.log(this.sentOrders);
-          for(var i=0;i<this.sentOrders.length;i++){
-     
+          for (var i = 0; i < this.sentOrders.length; i++) {
 
             this.ordenes = this.ordenes.filter(order => {
-    
+
               return order.orderNumber != this.sentOrders[i].orderNumber;
             });
+
           }
         }
-        //Codigo para abrir MODAL
-        this.modalService.open(mymodal, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {
-          this.closeResult = `Closed with: ${result}`;
-        }, (reason) => {
-          this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
-        });
-      
       },
       error: error => console.error('There was an error!', error)
-  })
+    })
 
   }
 
 
-  trackOrder(index:number, order:any) {
+  trackOrder(index: number, order: any) {
     console.log(order);
     return order ? order.orderNumber : null;
 
-}
-
-
-private getDismissReason(reason: any): string {
-  if (reason === ModalDismissReasons.ESC) {
-    return 'by pressing ESC';
-  } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
-    return 'by clicking on a backdrop';
-  } else {
-    return  `with: ${reason}`;
   }
-}
-  refresh(): void{
-    this.router.navigateByUrl('/',{skipLocationChange:true}).then(()=>{
+
+
+  private getDismissReason(reason: any): string {
+    if (reason === ModalDismissReasons.ESC) {
+      return 'by pressing ESC';
+    } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
+      return 'by clicking on a backdrop';
+    } else {
+      return `with: ${reason}`;
+    }
+  }
+
+  refresh(): void {
+    this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
       this.router.navigate([decodeURI(this.location.path())]);
     });
-    
-    
- 
+
+
+
   }
 
 
