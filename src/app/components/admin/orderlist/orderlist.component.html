@@ -39,7 +39,8 @@
 
                 <div class="button-wrapper text-right">
                     <!-- <a  class="button-margin btn btn-danger">Cancelar orden</a> -->
-                     <button (click)="createJob(order, mymodal)"type="button" class="btn btn-outline-dark btn-lg ">Enviar a stuart </button>
+                    <button (click)="fulfillOrder(order, mymodal)"type="button" class="btn btn-outline-danger btn-lg button-margin">Retirar orden</button>    
+                    <button (click)="createJob(order, mymodal)"type="button" class="btn btn-outline-dark btn-lg button-margin">Enviar a stuart </button>
                 </div>
             </div>
             <div class="card-footer text-muted">
@@ -52,6 +53,21 @@
         </div>
 
     </div>
+
+
+
+        <div *ngIf="ordersCompleted" class="orders-completed" >
+            
+                <div class="card text-center">
+                    <div class="card-body">
+                      <h5 class="card-title">No hay ordenes pendientes</h5>
+                      <button type="button" class="btn btn-outline-success" (click)="refresh()">Refrescar</button>  
+                    </div>
+    
+                  </div>
+        </div>
+  
+
 
 
 </div>
@@ -78,6 +94,9 @@
             </div>
             <div class="text-center" *ngIf="errorDisplay=='success'">
                 La solicitud a stuart se envió correctamente
+            </div>
+            <div class="text-center" *ngIf="errorDisplay=='fulfilled'">
+                Se retiró la orden correctamente.
             </div>
         </div>
         <div class="modal-footer">

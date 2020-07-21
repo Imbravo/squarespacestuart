@@ -22,6 +22,9 @@ export class OrderlistComponent implements OnInit {
   //Clases Modal
   closeResult: string;
   //Clases Modal
+
+  ordersCompleted: boolean; //orders completed
+
   ordenes;
   errorDisplay = 'loading';
   sentOrders: any[];
@@ -70,7 +73,15 @@ export class OrderlistComponent implements OnInit {
           return order.orderNumber != this.sentOrders[i].orderNumber;
         });
       }
-      console.log(this.ordenes);
+      console.log(this.ordenes.length);
+
+
+      if (this.ordenes.length > 0) {
+        this.ordersCompleted = false;
+      }
+      else {
+        this.ordersCompleted = true;
+      }
 
     })
 
@@ -143,10 +154,28 @@ export class OrderlistComponent implements OnInit {
     this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
       this.router.navigate([decodeURI(this.location.path())]);
     });
+  }
+
+
+  fulfillOrder(order, mymodal) {
+
+    this.errorDisplay = 'fulfilled';
+
+    this.orderService.createOrder(order);
+
+    this.modalService.open(mymodal, { ariaLabelledBy: 'modal-basic-title' }).result.then((result) => {
+      this.closeResult = `Closed with: ${result}`;
+    }, (reason) => {
+      this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+    });
+
+
+
 
 
 
   }
+
 
 
 }
