@@ -4,8 +4,13 @@
             <div class="card-header">
                 <div class="row">
                     <div class="col-6">
-                        Order Number: {{order.orderNumber}}
-                        Status: {{order.fulfillmentStatus}}
+                        <div>
+                            Order Number: {{order.orderNumber}}
+                            Status: {{order.fulfillmentStatus}}
+                        </div>
+                        <div class="shipping-line">
+                            {{order.shippingLines[0].method}}
+                        </div>
                     </div>
                     <div class="col-6 text-right">
                         {{order.billingAddress.firstName}} {{order.billingAddress.lastName}}
@@ -39,8 +44,14 @@
 
                 <div class="button-wrapper text-right">
                     <!-- <a  class="button-margin btn btn-danger">Cancelar orden</a> -->
-                    <button (click)="fulfillOrder(order, mymodal)"type="button" class="btn btn-outline-danger btn-lg button-margin">Retirar orden</button>    
-                    <button (click)="createJob(order, mymodal)"type="button" class="btn btn-outline-dark btn-lg button-margin">Enviar a stuart </button>
+                     
+                    <button (click)="fulfillOrder(order, mymodal)"type="button" class="btn btn-outline-danger btn-lg button-margin">Retirar orden</button> 
+                    
+                    <button *ngIf="order.shippingLines[0].method!='RECOGER EN TIENDA (CALLE SAN ANDRES, 31)'" (click)="createJob(order, mymodal)"type="button" class="btn btn-outline-dark btn-lg button-margin">Enviar a stuart </button>
+                   
+             
+                 
+                   
                 </div>
             </div>
             <div class="card-footer text-muted">

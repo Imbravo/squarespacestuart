@@ -63,17 +63,20 @@ export class OrderlistComponent implements OnInit {
       this.ordenes = JSON.parse(data.body);
       console.log(this.ordenes.result);
       this.ordenes = this.ordenes.result;
+      
       this.ordenes = this.ordenes.filter(order => {
         return order.fulfillmentStatus === 'PENDING'
       });
       console.log(this.ordenes);
+      
       for (var i = 0; i < this.sentOrders.length; i++) {
         this.ordenes = this.ordenes.filter(order => {
 
           return order.orderNumber != this.sentOrders[i].orderNumber;
         });
       }
-      console.log(this.ordenes.length);
+      
+      console.log(this.ordenes);
 
 
       if (this.ordenes.length > 0) {
@@ -93,17 +96,19 @@ export class OrderlistComponent implements OnInit {
   //Generates a pop up when success or error. 
   createJob(order, mymodal) {
     //Codigo para abrir MODAL
+
+    
     this.modalService.open(mymodal, { ariaLabelledBy: 'modal-basic-title' }).result.then((result) => {
       this.closeResult = `Closed with: ${result}`;
     }, (reason) => {
       this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
     });
-
+    
 
     var respuesta;
     console.log('clicked');
     console.log(order);
-
+    
     this.http.post<any>(`https://us-central1-squarespacestuart.cloudfunctions.net/getOrdenes`, order).subscribe({
       next: data => {
         respuesta = data;
@@ -170,11 +175,21 @@ export class OrderlistComponent implements OnInit {
     });
 
 
+  }
 
 
-
+  getTime(){
+    this.http.get<any>(`https://us-central1-squarespacestuart.cloudfunctions.net/getServerTime`).subscribe({
+      next: data => {
+      console.log(data);
+      return data;
+      },
+      error: error => console.error('There was an error!', error)
+    })
 
   }
+
+
 
 
 
