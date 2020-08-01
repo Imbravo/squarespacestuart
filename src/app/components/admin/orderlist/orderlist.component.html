@@ -114,3 +114,19 @@
             <button type="button" class="btn btn-outline-success" (click)="c('Save click'); refresh();">Ok</button>
         </div>
     </ng-template>
+    
+
+        <div *ngIf='showButton' class="container">
+    
+            <div class="row">
+                <div class="col-12 text-center">
+                    <img (click)='addToHomeScreen()' class='pwa-img' src="../../../../assets/icons/Picandnicsmall.png" alt="">
+                </div>
+                <div class="col-12 text-center ">
+                   <p class="download-prompt">Descargar como APP.</p> 
+                </div>
+    
+            </div>
+    
+        </div>
+

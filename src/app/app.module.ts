@@ -15,6 +15,7 @@ import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 
 import { AngularFireAuthGuard, redirectUnauthorizedTo } from '@angular/fire/auth-guard';
 import { OrderlistComponent } from './components/admin/orderlist/orderlist.component';
+import { ServiceWorkerModule } from '@angular/service-worker';
 const redirectUnauthorizedToLogin = () => redirectUnauthorizedTo(['']);
 
 @NgModule({
@@ -32,7 +33,8 @@ const redirectUnauthorizedToLogin = () => redirectUnauthorizedTo(['']);
     AngularFireModule.initializeApp(environment.firebase),
     AngularFirestoreModule,
     HttpClientModule,
-    NgbModule
+    NgbModule,
+    ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production })
   ],
   providers: [],
   bootstrap: [AppComponent]
